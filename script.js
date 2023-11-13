@@ -23,3 +23,12 @@ function createPlayer(playerName) {
 
   return { getName, getScore, move, declareRoundWinner };
 }
+
+let game = {
+  players: [],
+
+  start() {
+    const gameBoard = createGameBoard();
+    return gameBoard.createGrid();
+  },
+};
