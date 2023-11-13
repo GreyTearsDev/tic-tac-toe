@@ -10,3 +10,16 @@ function createGameBoard() {
   };
   return { createGrid };
 }
+
+function createPlayer(playerName) {
+  const name = playerName;
+  let score = 0;
+  let moves = []; // stores the position of the moves the user makes
+
+  const declareRoundWinner = () => score++;
+  const move = (location) => moves.push(location);
+  const getScore = () => score;
+  const getName = () => name;
+
+  return { getName, getScore, move, declareRoundWinner };
+}
