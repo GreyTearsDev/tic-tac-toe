@@ -90,13 +90,21 @@ const game = (function () {
     player2.setName(prompt("what is your name?"));
   };
 
-  const checkForWinner = (player) => {
-    for (let locationArray of gameBoard.winLocations) {
-      log("winner found");
+  const playerWonTheGame = (player) => {
+    for (let property in gameBoard.winLocations) {
+      let winCondition = gameBoard.winLocations[property];
+      log(player.locations);
+      if (player.locations.includes(winCondition)) {
+        return true;
+      }
+      return false;
     }
-    log("no winner yet");
+
+    //
   };
-  let start = () => {};
+  let start = () => {
+    roundCount++;
+  };
 
   return {
     player1,
@@ -105,12 +113,14 @@ const game = (function () {
     setPlayerName,
     start,
     roundCount,
-    checkForWinner,
+    playerWonTheGame,
   };
 })();
 
-game.player1.locations.push(2);
-game.player1.locations.push(1);
-game.player1.locations.push(0);
+game.player1.locations.push(game.gameBoard.winLocations.firstRow);
 
-game.checkForWinner(game.player1);
+if (game.playerWonTheGame(game.player1)) {
+  log("win condition was found");
+} else {
+  log("something whent wrong");
+}
