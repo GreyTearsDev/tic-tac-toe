@@ -99,17 +99,16 @@ const game = (function () {
       }
       return false;
     }
-
-    const checkForTheWinner = (player1, player2) => {
-      // checks if a player has won the game. If true, it returns the player. Otherwise, it returns undefined
-      if (checkForTheWinner(player1)) return player1;
-      if (checkForTheWinner(player2)) return player2;
-
-      return undefined;
-    };
-
-    //
   };
+
+  const checkForTheWinner = (player1, player2) => {
+    // checks if a player has won the game. If true, it returns the player. Otherwise, it returns undefined
+    if (playerWonTheGame(player1)) return player1;
+    if (playerWonTheGame(player2)) return player2;
+
+    return undefined;
+  };
+
   let start = () => {
     roundCount++;
   };
@@ -121,13 +120,13 @@ const game = (function () {
     setPlayerName,
     start,
     roundCount,
-    playerWonTheGame,
+    checkForTheWinner,
   };
 })();
 
 game.player1.locations.push(game.gameBoard.winLocations.firstRow);
 
-if (game.playerWonTheGame(game.player1)) {
+if (game.checkForTheWinner(game.player1, game.player2)) {
   log("win condition was found");
 } else {
   log("something whent wrong");
