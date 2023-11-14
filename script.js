@@ -72,7 +72,6 @@ function createPlayer(playerName) {
     getName,
     setName,
     getScore,
-    move,
     moveCount,
     locations,
     declareRoundWinner,
@@ -83,6 +82,7 @@ const game = (function () {
   let player1 = createPlayer("X");
   let player2 = createPlayer("O");
   let roundCount = 0;
+  let totalMovements = 0;
   const gameBoard = createGameBoard();
 
   const setPlayerName = () => {
@@ -99,6 +99,14 @@ const game = (function () {
       }
       return false;
     }
+
+    const checkForTheWinner = (player1, player2) => {
+      // checks if a player has won the game. If true, it returns the player. Otherwise, it returns undefined
+      if (checkForTheWinner(player1)) return player1;
+      if (checkForTheWinner(player2)) return player2;
+
+      return undefined;
+    };
 
     //
   };
