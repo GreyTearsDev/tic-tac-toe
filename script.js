@@ -1,22 +1,6 @@
 const log = console.log;
 
 const createGameBoard = function () {
-  const firstRow = [
-    [0, 0],
-    [0, 1],
-    [0, 2],
-  ];
-  const secondRow = [
-    [1, 0],
-    [1, 1],
-    [1, 2],
-  ];
-  const thirdRow = [
-    [0, 0],
-    [1, 1],
-    [2, 2],
-  ];
-
   const winLocations = [
     [0, 1, 2],
     [3, 4, 5],
@@ -65,8 +49,8 @@ const game = (function () {
     player2.setName(prompt("what is your name?"));
   };
 
-  const getDesiredLocation = (rowIndex, locationIndex) => {
-    return gameBoard.grid[rowIndex].splice(locationIndex, 1, undefined); // replaces the value in the row with undefined so it cannot be chosen again
+  const getDesiredLocation = (locationIndex) => {
+    return gameBoard.grid.splice(locationIndex, 1, undefined); // replaces the value in the row with undefined so it cannot be chosen again
   };
 
   const playerWonTheRound = (player) => {
@@ -114,24 +98,17 @@ const game = (function () {
     player1.canMove = true;
     player2.canMove = false;
 
-    movePlayer(player1, player2, grid[0][0]);
-    log(
-      `Player1 locations: ${player1.locations}. Player2 locations: ${player2.locations}`
-    );
+    movePlayer(player1, player2, grid[0]);
 
-    movePlayer(player1, player2, grid[1][0]);
+    movePlayer(player1, player2, grid[4]);
+
+    movePlayer(player1, player2, grid[1]);
+
+    movePlayer(player1, player2, grid[6]);
     log(
       `Player1 locations: ${player1.locations}. Player2 locations: ${player2.locations}`
     );
-    movePlayer(player1, player2, grid[0][1]);
-    log(
-      `Player1 locations: ${player1.locations}. Player2 locations: ${player2.locations}`
-    );
-    movePlayer(player1, player2, grid[1][0]);
-    log(
-      `Player1 locations: ${player1.locations}. Player2 locations: ${player2.locations}`
-    );
-    movePlayer(player1, player2, grid[0][2]);
+    movePlayer(player1, player2, grid[2]);
     log(
       `Player1 locations: ${player1.locations}. Player2 locations: ${player2.locations}`
     );
@@ -192,6 +169,8 @@ const game = (function () {
 })();
 
 game.play();
+log(game.getDesiredLocation(1));
+log();
 
 // let location = game.getDesiredLocation(0, 0);
 // game.movePlayer(game.player1, location);
