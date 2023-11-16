@@ -17,14 +17,12 @@ const createGameBoard = function () {
   return { grid, winLocations };
 };
 
-function createPlayer(playerName) {
-  const name = playerName;
+function createPlayer() {
+  let name;
   let score = 0;
   let locations = []; // stores the locations where the user has been to
-  let moveCount = 0; // keeps track of how many times the user has moved
-  let canMove;
+  let canMove; // keeps track of whether it is the users turn to play (true if yes. false if no)
 
-  const declareRoundWinner = () => score++;
   const move = (location) => locations.push(location);
   const getScore = () => score;
   const getName = () => name;
@@ -35,18 +33,18 @@ function createPlayer(playerName) {
     getName,
     setName,
     getScore,
-    moveCount,
     locations,
     declareRoundWinner,
+    move,
   };
 }
 
 const game = (function () {
   const gameBoard = createGameBoard();
 
-  const setPlayerName = () => {
-    player1.setName(prompt("what is your name?"));
-    player2.setName(prompt("what is your name?"));
+  const setPlayersName = () => {
+    player1.setName = document.querySelector("#x").textContent;
+    player2.setName = document.querySelector("#o").textContent;
   };
 
   const getDesiredLocation = (locationIndex) => {
@@ -66,14 +64,21 @@ const game = (function () {
 
   const movePlayer = (player1, player2, location) => {
     if (player1.canMove) {
-      player1.locations.push(location);
+      player1.move(location);
       player1.canMove = false;
       player2.canMove = true;
     } else {
-      player2.locations.push(location);
+      player2.move(location);
       player2.canMove = false;
       player1.canMove = true;
     }
+  };
+
+  const resetPlayersData = (player1, player2) => {
+    player1.score = 0;
+    player1.locations = [];
+    player2.score = 0;
+    player2.locations = [];
   };
 
   const displayGameWinner = (player) => log(`${player} won the game`);
@@ -88,34 +93,17 @@ const game = (function () {
 
   let play = () => {
     let grid = gameBoard.grid;
-    let totalMoveCount = 0;
     let player1 = createPlayer("X");
     let player2 = createPlayer("O");
     let round = 1;
     let gameWinner;
     let roundWinner;
 
+    setPlayersName();
     player1.canMove = true;
     player2.canMove = false;
 
     movePlayer(player1, player2, grid[0]);
-
-    movePlayer(player1, player2, grid[4]);
-
-    movePlayer(player1, player2, grid[1]);
-
-    movePlayer(player1, player2, grid[6]);
-    log(
-      `Player1 locations: ${player1.locations}. Player2 locations: ${player2.locations}`
-    );
-    movePlayer(player1, player2, grid[2]);
-    log(
-      `Player1 locations: ${player1.locations}. Player2 locations: ${player2.locations}`
-    );
-
-    log(grid);
-
-    log(checkForTheWinner(player1, player2));
 
     // log(`round: ${round}`);
     // while (totalMoveCount !== 5) {
@@ -159,13 +147,14 @@ const game = (function () {
   };
 
   return {
-    gameBoard,
-    setPlayerName,
     play,
-    checkForTheWinner,
-    movePlayer,
-    getDesiredLocation,
   };
+})();
+
+const uIManagement = (function () {
+  const startBtn = document
+    .querySelector("#start-btn")
+    .addEventListener("click", game.play());
 })();
 
 game.play();

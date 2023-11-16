@@ -1,0 +1,106 @@
+*,
+*::after,
+*::before {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --white: #f2f2f2;
+  --red: #d92525;
+  --red-mid: #8c1f28;
+  --red-dark: #591c21;
+  --green: #044040;
+  font-family: "Lato", sans-serif;
+}
+/*=======MENU START========*/
+
+.menu {
+  background-color: var(--white);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 5vw;
+  align-items: center;
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: bolder;
+  background-color: var(--green);
+  padding: 15px;
+  border-radius: 10px;
+  color: #fff;
+  justify-self: flex-start;
+}
+
+.inputs-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5vw;
+}
+
+input {
+  appearance: none;
+  height: 50px;
+  width: 15vw;
+  padding: 15px;
+  border-radius: 10px;
+  border: none;
+}
+
+.inputs-wrapper div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+input::placeholder,
+p {
+  text-align: center;
+}
+
+input:focus {
+  outline: none;
+  border: 2px solid var(--red-mid);
+}
+
+label {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+#x {
+  color: var(--green);
+}
+
+#o {
+  color: var(--red);
+}
+
+#x + input {
+  border: 2px solid var(--green);
+}
+
+#o + input {
+  border: 2px solid var(--red);
+}
+
+button {
+  width: 18vw;
+  height: 50px;
+  border-radius: 10px;
+  border: none;
+  background-color: var(--red-mid);
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: var(--red);
+}
