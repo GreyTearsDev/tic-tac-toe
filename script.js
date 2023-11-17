@@ -74,11 +74,12 @@ const game = (function () {
     }
   };
 
-  const resetPlayersData = (player1, player2) => {
+  const resetGameData = (player1, player2) => {
     player1.score = 0;
     player1.locations = [];
     player2.score = 0;
     player2.locations = [];
+    gameBoard.grid = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   };
 
   const displayGameWinner = (player) => log(`${player} won the game`);
