@@ -10,10 +10,11 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./style-start-gameOver.css" />
+    <link rel="stylesheet" href="./style-board.css" />
     <title>Tic Tac Toe</title>
   </head>
   <body>
-    <div id="start">
+    <div id="start-screen">
       <h1>TIC TAC TOE</h1>
 
       <div class="inputs-wrapper">
@@ -49,7 +50,27 @@
         <a href="https://github.com/GreyTearsDev">Tirso Samalungo</a> 2023
       </p>
     </div>
-    <div id="game-over">
+
+    <div id="game-screen">
+      <p id="player-one">Player 1</p>
+      <p id="round-count">Round 0</p>
+      <p id="player-two">Player 2</p>
+      <div id="grid-container">
+        <div id="grid">
+          <div class="cell">0</div>
+          <div class="cell">1</div>
+          <div class="cell">2</div>
+          <div class="cell">3</div>
+          <div class="cell">4</div>
+          <div class="cell">5</div>
+          <div class="cell">6</div>
+          <div class="cell">7</div>
+          <div class="cell">8</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="game-over-screen">
       <h1>Game Over</h1>
       <button type="submit" id="restart">Restart</button>
     </div>

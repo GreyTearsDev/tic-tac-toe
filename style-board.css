@@ -1,0 +1,21 @@
+*,
+*::after,
+*::before {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --white: #f2f2f2;
+  --red: #d92525;
+  --red-mid: #8c1f28;
+  --red-dark: #591c21;
+  --green: #044040;
+  font-family: "Lato", sans-serif;
+}
+
+#game-screen {
+  width: 100vw;
+  height: 100vh;
+}

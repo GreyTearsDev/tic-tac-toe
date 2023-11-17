@@ -16,8 +16,8 @@
 }
 /*=======MENU START========*/
 
-#start,
-#game-over {
+#start-screen,
+#game-over-screen {
   background-color: var(--white);
   width: 100vw;
   height: 100vh;
@@ -117,11 +117,11 @@ button:hover {
   background-color: #fff;
 }
 
-#game-over h1 {
+#game-over-screen h1 {
   background-color: var(--red);
 }
 
-#game-over {
+#game-over-screen {
   height: 100vh;
   justify-content: center;
   display: none;
