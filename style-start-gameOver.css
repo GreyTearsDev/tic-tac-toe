@@ -16,7 +16,8 @@
 }
 /*=======MENU START========*/
 
-.menu {
+#start,
+#game-over {
   background-color: var(--white);
   width: 100vw;
   height: 100vh;
@@ -99,8 +100,29 @@ button {
   color: #fff;
   font-size: 1.3rem;
   font-weight: bold;
+  cursor: pointer;
 }
 
 button:hover {
   background-color: var(--red);
+}
+
+/*=======GAME OVER ===============*/
+#restart {
+  background-color: var(--green);
+}
+
+#restart:hover {
+  color: var(--green);
+  background-color: #fff;
+}
+
+#game-over h1 {
+  background-color: var(--red);
+}
+
+#game-over {
+  height: 100vh;
+  justify-content: center;
+  display: none;
 }
