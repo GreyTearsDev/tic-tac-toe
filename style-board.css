@@ -20,7 +20,7 @@
   height: 100vh;
   background-color: var(--white);
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(300px, 1fr);
   grid-template-rows: 90px 30px 1fr;
 }
 
@@ -50,8 +50,9 @@
 }
 
 .score-container {
+  border: 1px solid green;
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(300px, 1fr);
   grid-template-rows: repeat(2, 1fr);
   font-size: 1.4rem;
 }

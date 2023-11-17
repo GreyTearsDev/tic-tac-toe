@@ -104,7 +104,11 @@ button {
 }
 
 button:hover {
-  background-color: var(--red);
+  background-color: var(--red-mid);
+}
+
+button:active {
+  background-color: var(--red-dark);
 }
 
 /*=======GAME OVER ===============*/
