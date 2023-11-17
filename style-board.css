@@ -19,7 +19,7 @@
   width: 100vw;
   height: 100vh;
   background-color: var(--white);
-  display: grid;
+  display: none;
   grid-template-columns: minmax(300px, 1fr);
   grid-template-rows: 90px 30px 1fr;
 }
@@ -50,7 +50,6 @@
 }
 
 .score-container {
-  border: 1px solid green;
   display: grid;
   grid-template-columns: minmax(300px, 1fr);
   grid-template-rows: repeat(2, 1fr);
@@ -88,6 +87,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.cell:hover {
+  background-color: #f6f6f6;
+  border: 1px solid black;
 }
 
 .left-border {

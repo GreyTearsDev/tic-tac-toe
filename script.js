@@ -39,7 +39,7 @@ function createPlayer() {
   };
 }
 
-const game = (function () {
+const game = function () {
   const gameBoard = createGameBoard();
 
   const setPlayersName = () => {
@@ -150,17 +150,20 @@ const game = (function () {
   return {
     play,
   };
-})();
+};
 
-const uIManagement = (function () {
-  const startBtn = document
-    .querySelector("#start-btn")
-    .addEventListener("click", game.play());
+(function () {
+  const startScreen = document.querySelector("#start-screen");
+  const gameBoardScreen = document.querySelector("#game-screen");
+  const gameOverScreen = document.querySelector("#game-over-screen");
+  const startBtn = document.querySelector("#start-btn");
+  startBtn.addEventListener("click", function () {
+    startScreen.style.display = "none";
+    gameBoardScreen.style.display = "grid";
+    gameOverScreen.style.display = "none";
+    game.play();
+  });
 })();
-
-game.play();
-log(game.getDesiredLocation(1));
-log();
 
 // let location = game.getDesiredLocation(0, 0);
 // game.movePlayer(game.player1, location);
