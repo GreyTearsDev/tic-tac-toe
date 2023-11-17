@@ -21,19 +21,50 @@
   background-color: var(--white);
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 90px 1fr;
+  grid-template-rows: 90px 30px 1fr;
 }
 
-#game-screen p {
-  font-size: 2rem;
-}
-
-#menu-bar {
+.menu-bar {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   box-shadow: 4px 4px 2px rgba(68, 66, 66, 0.187);
-  align-items: center;
   background-color: #fff;
+  font-size: 2rem;
+  font-weight: bolder;
+}
+
+.player,
+.round-count {
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
+
+.one {
+  background-color: var(--green);
+  color: #fff;
+}
+.two {
+  background-color: var(--red-mid);
+  color: #fff;
+}
+
+.score-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(2, 1fr);
+  font-size: 1.4rem;
+}
+
+.scores,
+.score-values {
+  display: flex;
+  justify-content: space-around;
+  gap: 90vw;
+}
+
+.scores {
+  padding: 5px;
 }
 
 #grid-container {

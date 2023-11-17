@@ -80,7 +80,7 @@ label {
 }
 
 #o {
-  color: var(--red);
+  color: var(--red-mid);
 }
 
 #x + input {
@@ -88,7 +88,7 @@ label {
 }
 
 #o + input {
-  border: 2px solid var(--red);
+  border: 2px solid var(--red-mid);
 }
 
 button {
@@ -96,7 +96,7 @@ button {
   height: 50px;
   border-radius: 10px;
   border: none;
-  background-color: var(--red-mid);
+  background-color: var(--red);
   color: #fff;
   font-size: 1.3rem;
   font-weight: bold;
