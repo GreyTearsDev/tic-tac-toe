@@ -34,7 +34,6 @@ let createPlayer = function () {
     setName,
     getScore,
     locations,
-    declareRoundWinner,
     move,
   };
 };
@@ -42,6 +41,12 @@ let createPlayer = function () {
 const game = (function () {
   const gameBoard = createGameBoard();
   let roundCount = 1;
+  let gameWinner;
+  let roundWinner;
+  let player1 = createPlayer("X");
+  let player2 = createPlayer("O");
+  player1.canMove = true;
+  player2.canMove = false;
 
   const setPlayersName = () => {
     player1.setName = document.querySelector("#x").textContent;
@@ -73,6 +78,7 @@ const game = (function () {
       player2.canMove = false;
       player1.canMove = true;
     }
+    gameBoard.grid.splice(location, 1, undefined);
   };
 
   const resetGameData = (player1, player2) => {
@@ -83,9 +89,6 @@ const game = (function () {
     gameBoard.grid = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   };
 
-  const displayGameWinner = (player) => log(`${player} won the game`);
-  const displayRoundWinner = (player) => log(`${player} won the round`);
-
   // put it in a while loop to be checked every time someone plays from the moment the totalMoveCount reaches 5
   const checkForTheWinner = (player1, player2) => {
     // checks if a player has won the game. If true, it returns the player. Otherwise, it returns undefined
@@ -93,32 +96,32 @@ const game = (function () {
     if (playerWonTheRound(player2)) return player2;
   };
 
-  let play = () => {
-    let grid = gameBoard.grid;
-    let player1 = createPlayer("X");
-    let player2 = createPlayer("O");
-    let gameWinner;
-    let roundWinner;
-
-    player1.canMove = true;
-    player2.canMove = false;
-
-    movePlayer(player1, player2, grid[0]);
-  };
-
   return {
-    play,
     roundCount,
+    movePlayer,
+    player1,
+    player2,
   };
 })();
 
 (function () {
   const startBtn = document.querySelector("#start-btn");
+  const cells = document.querySelectorAll(".cell");
+
+  cells.forEach((cell) =>
+    cell.addEventListener("click", function () {
+      let cellId = cell.id;
+
+      game.movePlayer(game.player1, game.player2, cellId);
+    })
+  );
 
   startBtn.addEventListener("click", function () {
     const roundCounter = document.querySelector(".round-count");
     const player1Name = document.querySelector(".one");
     const player2Name = document.querySelector(".two");
+    const player1InputName = document.querySelector("#player-one-name").value;
+    const player2InputName = document.querySelector("#player-two-name").value;
     const startScreen = document.querySelector("#start-screen");
     const gameBoardScreen = document.querySelector("#game-screen");
     const gameOverScreen = document.querySelector("#game-over-screen");
@@ -128,8 +131,12 @@ const game = (function () {
     gameOverScreen.style.display = "none";
 
     roundCounter.textContent = `Round ${game.roundCount}`;
-    player1Name.textContent = document.querySelector("#player-one-name").value;
-    player2Name.textContent = document.querySelector("#player-two-name").value;
+    if (!player1InputName == "") {
+      player1Name.textContent = player1InputName;
+    }
+    if (!player2InputName == "") {
+      player2Name.textContent = player2InputName;
+    }
   });
 })();
 
