@@ -41,6 +41,7 @@ let createPlayer = function () {
 const game = (function () {
   const gameBoard = createGameBoard();
   let roundCount = 1;
+  let moveCount = 0;
   let gameWinner;
   let roundWinner;
   let player1 = createPlayer("X");
@@ -48,38 +49,38 @@ const game = (function () {
   player1.canMove = true;
   player2.canMove = false;
 
-  const setPlayersName = () => {
-    player1.setName = document.querySelector("#x").textContent;
-    player2.setName = document.querySelector("#o").textContent;
-  };
-
   const getDesiredLocation = (locationIndex) => {
     return gameBoard.grid.splice(locationIndex, 1, undefined); // replaces the value in the row with undefined so it cannot be chosen again
   };
 
   const playerWonTheRound = (player) => {
     let winLocations = gameBoard.winLocations;
+    log(player.locations);
     for (let i = 0; i < winLocations.length; i++) {
+      log(winLocations[i]);
+      log(player.locations.includes(winLocations[i]));
       if (player.locations.includes(winLocations[i])) {
         log("hi");
         player.score++;
         return true;
       }
-      return false;
     }
+    return false;
   };
 
   const movePlayer = (player1, player2, location) => {
-    gameBoard.grid.splice(location, 1, undefined);
+    getDesiredLocation(location);
 
     if (player1.canMove) {
       player1.move(location);
       player1.canMove = false;
       player2.canMove = true;
+      moveCount++;
     } else {
       player2.move(location);
       player2.canMove = false;
       player1.canMove = true;
+      moveCount++;
     }
     log(gameBoard.grid);
   };
@@ -99,8 +100,14 @@ const game = (function () {
     if (playerWonTheRound(player2)) return player2;
   };
 
+  const gameStatus = () => {
+    if (moveCount >= 5) {
+      roundWinner = checkForTheWinner(player1, player2);
+    }
+  };
   return {
     roundCount,
+    moveCount,
     movePlayer,
     player1,
     player2,
@@ -117,22 +124,16 @@ const game = (function () {
     cell.addEventListener("click", function () {
       let cellId = cell.id;
 
-      if (!game.gameBoard.grid.includes(Number(cellId))) {
-        // do nothing
-      } else if (game.player1.canMove === true) {
-        game.movePlayer(game.player1, game.player2, cellId);
-        cell.textContent = "X";
-      } else {
-        game.movePlayer(game.player1, game.player2, cellId);
-        cell.textContent = "O";
-      }
-
-      log(game.player1.locations);
-      log(game.player2.locations);
-      let winner = game.checkForTheWinner(game.player1, game.player2);
-
-      if (winner !== undefined) {
-        log("hi");
+      if (game.gameBoard.grid.includes(Number(cellId))) {
+        if (game.player1.canMove === true) {
+          game.movePlayer(game.player1, game.player2, cellId);
+          cell.textContent = "X";
+          cell.style.color = "#044040";
+        } else {
+          game.movePlayer(game.player1, game.player2, cellId);
+          cell.textContent = "O";
+          cell.style.color = "#8c1f28";
+        }
       }
     })
   );
