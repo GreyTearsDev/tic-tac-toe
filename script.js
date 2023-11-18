@@ -101,6 +101,7 @@ const game = (function () {
     movePlayer,
     player1,
     player2,
+    gameBoard,
   };
 })();
 
@@ -111,6 +112,14 @@ const game = (function () {
   cells.forEach((cell) =>
     cell.addEventListener("click", function () {
       let cellId = cell.id;
+
+      if (!game.gameBoard.grid.includes(Number(cellId))) {
+        // do nothing
+      } else if (game.player1.canMove === true) {
+        cell.textContent = "X";
+      } else {
+        cell.textContent = "O";
+      }
 
       game.movePlayer(game.player1, game.player2, cellId);
     })
