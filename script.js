@@ -58,9 +58,10 @@ const game = (function () {
   };
 
   const playerWonTheRound = (player) => {
-    for (let property in gameBoard.winLocations) {
-      let winCondition = gameBoard.winLocations[property];
-      if (player.locations.includes(winCondition)) {
+    let winLocations = gameBoard.winLocations;
+    for (let i = 0; i < winLocations.length; i++) {
+      if (player.locations.includes(winLocations[i])) {
+        log("hi");
         player.score++;
         return true;
       }
@@ -69,6 +70,8 @@ const game = (function () {
   };
 
   const movePlayer = (player1, player2, location) => {
+    gameBoard.grid.splice(location, 1, undefined);
+
     if (player1.canMove) {
       player1.move(location);
       player1.canMove = false;
@@ -78,7 +81,7 @@ const game = (function () {
       player2.canMove = false;
       player1.canMove = true;
     }
-    gameBoard.grid.splice(location, 1, undefined);
+    log(gameBoard.grid);
   };
 
   const resetGameData = (player1, player2) => {
@@ -102,6 +105,7 @@ const game = (function () {
     player1,
     player2,
     gameBoard,
+    checkForTheWinner,
   };
 })();
 
@@ -116,12 +120,20 @@ const game = (function () {
       if (!game.gameBoard.grid.includes(Number(cellId))) {
         // do nothing
       } else if (game.player1.canMove === true) {
+        game.movePlayer(game.player1, game.player2, cellId);
         cell.textContent = "X";
       } else {
+        game.movePlayer(game.player1, game.player2, cellId);
         cell.textContent = "O";
       }
 
-      game.movePlayer(game.player1, game.player2, cellId);
+      log(game.player1.locations);
+      log(game.player2.locations);
+      let winner = game.checkForTheWinner(game.player1, game.player2);
+
+      if (winner !== undefined) {
+        log("hi");
+      }
     })
   );
 
