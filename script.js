@@ -17,7 +17,7 @@ const createGameBoard = function () {
   return { grid, winLocations };
 };
 
-function createPlayer() {
+let createPlayer = function () {
   let name;
   let score = 0;
   let locations = []; // stores the locations where the user has been to
@@ -37,10 +37,11 @@ function createPlayer() {
     declareRoundWinner,
     move,
   };
-}
+};
 
-const game = function () {
+const game = (function () {
   const gameBoard = createGameBoard();
+  let roundCount = 1;
 
   const setPlayersName = () => {
     player1.setName = document.querySelector("#x").textContent;
@@ -96,72 +97,39 @@ const game = function () {
     let grid = gameBoard.grid;
     let player1 = createPlayer("X");
     let player2 = createPlayer("O");
-    let round = 1;
     let gameWinner;
     let roundWinner;
 
-    setPlayersName();
     player1.canMove = true;
     player2.canMove = false;
 
     movePlayer(player1, player2, grid[0]);
-
-    // log(`round: ${round}`);
-    // while (totalMoveCount !== 5) {
-    //   //let the players make
-    //   let player1Move = prompt("X enter a location");
-    //   movePlayer(player1, player1Move);
-    //   totalMoveCount++;
-
-    //   if (totalMoveCount == 5) break;
-
-    //   let player2Move = prompt("O enter a location");
-    //   movePlayer(player2, player2Move);
-    //   totalMoveCount++;
-    // }
-
-    // while (checkForTheWinner(player1, player2) === undefined) {
-    //   let player1Move = prompt("X enter a location");
-    //   movePlayer(player1, player1Move);
-    //   if (playerWonTheRound(player1)) {
-    //     roundWinner = player1;
-    //     playerWonTheRound(player1);
-    //     break;
-    //   }
-
-    //   let player2Move = prompt("O enter a location");
-    //   movePlayer(player2, player2Move);
-    //   if (playerWonTheRound(player2)) {
-    //     roundWinner = player2;
-    //     playerWonTheRound(player2);
-    //     break;
-    //   }
-    // }
-
-    // player1.score > player2.score
-    //   ? (gameWinner = player1)
-    //   : (gameWinner = player2);
-
-    // if (winner !== undefined) {
-    //   displayGameWinner(gameWinner);
-    // }
   };
 
   return {
     play,
+    roundCount,
   };
-};
+})();
 
 (function () {
-  const startScreen = document.querySelector("#start-screen");
-  const gameBoardScreen = document.querySelector("#game-screen");
-  const gameOverScreen = document.querySelector("#game-over-screen");
   const startBtn = document.querySelector("#start-btn");
+
   startBtn.addEventListener("click", function () {
+    const roundCounter = document.querySelector(".round-count");
+    const player1Name = document.querySelector(".one");
+    const player2Name = document.querySelector(".two");
+    const startScreen = document.querySelector("#start-screen");
+    const gameBoardScreen = document.querySelector("#game-screen");
+    const gameOverScreen = document.querySelector("#game-over-screen");
+
     startScreen.style.display = "none";
     gameBoardScreen.style.display = "grid";
     gameOverScreen.style.display = "none";
-    game.play();
+
+    roundCounter.textContent = `Round ${game.roundCount}`;
+    player1Name.textContent = document.querySelector("#player-one-name").value;
+    player2Name.textContent = document.querySelector("#player-two-name").value;
   });
 })();
 
