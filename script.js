@@ -78,14 +78,10 @@ const game = (function () {
     getDesiredLocation(location);
 
     if (player1.canMove) {
-      player1.increaseMoveCount();
-      log(player1.getMoveCount());
       player1.move(location);
       player1.canMove = false;
       player2.canMove = true;
     } else {
-      player2.increaseMoveCount();
-      log(player2.getMoveCount());
       player2.move(location);
       player2.canMove = false;
       player1.canMove = true;
@@ -120,22 +116,24 @@ const game = (function () {
 
       if (game.gameBoard.grid.includes(Number(cellId))) {
         if (game.player1.canMove === true) {
-          if (game.player1.moveCount >= 3) {
-            log("hi");
-            playerWonTheRound(player1);
-          }
-
           game.movePlayer(game.player1, game.player2, cellId);
           cell.textContent = "X";
           cell.style.color = "#044040";
-        } else {
-          if (game.player2.moveCount >= 3) {
-            playerWonTheRound(player2);
-          }
+          game.player1.increaseMoveCount();
 
+          if (game.player1.getMoveCount() > 2) {
+            log("hi");
+            game.playerWonTheRound(game.player1);
+          }
+        } else {
           game.movePlayer(game.player1, game.player2, cellId);
           cell.textContent = "O";
           cell.style.color = "#8c1f28";
+          game.player2.increaseMoveCount();
+
+          if (game.player2.getMoveCount() > 2) {
+            game.playerWonTheRound(game.player2);
+          }
         }
       }
     })
