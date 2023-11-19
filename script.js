@@ -42,22 +42,26 @@ let createPlayer = function () {
     return moveCount;
   };
   const getScore = () => score;
+  const setScore = () => score++;
+  const resetLocations = () => {
+    locations = [];
+  };
 
   return {
     canMove,
     getScore,
+    setScore,
     locations,
     move,
     getMoveCount,
     increaseMoveCount,
+    resetLocations,
   };
 };
 
 const game = (function () {
   const gameBoard = createGameBoard();
   let roundCount = 1;
-  let gameWinner;
-  let roundWinner;
   let player1 = createPlayer();
   let player2 = createPlayer();
   player1.canMove = true;
@@ -78,15 +82,24 @@ const game = (function () {
         if (i == array.length - 1) return true; //return true if all locations int the win condition have been visited by the user
       }
     }
+    return false;
+  };
 
-    // for (let winLoc in winLocations) {
-    //   for (let i = 0; i < winLocations[winLoc].length; i++) {
-    //     if (!player.locations.includes(String(winLocations[winLoc][i]))) {
-    //       log(i + " not in ");
-    //       continue;
-    //     }
-    //   }
-    // }
+  const declareRoundWinner = (player) => {
+    if (playerWonTheRound(player)) {
+      roundCount++;
+      player.setScore();
+      resetGameData();
+    }
+  };
+
+  const declareGameWinner = (player1, player2) => {
+    player1.getScore > player2.getScore ? player1 : player2;
+  };
+
+  const isADraw = () => {
+    if (player1.getMoveCount() + player2.getMoveCount() === 9) return true;
+    return false;
   };
 
   const movePlayer = (player1, player2, location) => {
@@ -103,11 +116,9 @@ const game = (function () {
     }
   };
 
-  const resetGameData = (player1, player2) => {
-    player1.score = 0;
-    player1.locations = [];
-    player2.score = 0;
-    player2.locations = [];
+  const resetGameData = () => {
+    player1.resetLocations();
+    player2.resetLocations();
     gameBoard.grid = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   };
 
@@ -118,6 +129,11 @@ const game = (function () {
     player2,
     gameBoard,
     playerWonTheRound,
+    declareRoundWinner,
+    declareGameWinner,
+    isADraw,
+    resetGameData,
+    totalMoveCount,
   };
 })();
 
@@ -137,7 +153,7 @@ const game = (function () {
           game.player1.increaseMoveCount();
 
           if (game.player1.getMoveCount() > 2) {
-            game.playerWonTheRound(game.player1);
+            game.declareRoundWinner(game.player1);
           }
         } else {
           game.movePlayer(game.player1, game.player2, cellId);
@@ -146,9 +162,16 @@ const game = (function () {
           game.player2.increaseMoveCount();
 
           if (game.player2.getMoveCount() > 2) {
-            game.playerWonTheRound(game.player2);
+            game.declareRoundWinner(game.player2);
           }
         }
+      }
+      if (game.isADraw()) {
+        //declare draw
+      }
+      if (game.roundCount > 2) {
+        let winner = game.declareGameWinner(game.player1, game.player2);
+        log(winner);
       }
     })
   );
@@ -175,4 +198,6 @@ const game = (function () {
       player2Name.textContent = player2InputName;
     }
   });
+
+  const showFinalresult = () => {};
 })();
