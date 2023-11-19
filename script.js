@@ -1,16 +1,27 @@
 const log = console.log;
 
 const createGameBoard = function () {
-  const winLocations = {
-    firstRow: [0, 1, 2],
-    secondRow: [3, 4, 5],
-    thirdRow: [6, 7, 8],
-    firstColumn: [0, 3, 6],
-    secondColumn: [1, 4, 7],
-    thirdColumn: [2, 5, 8],
-    diagonalLeft: [0, 4, 8],
-    diagonalRight: [2, 4, 6],
-  };
+  // const winLocations = {
+  //   firstRow: [0, 1, 2],
+  //   secondRow: [3, 4, 5],
+  //   thirdRow: [6, 7, 8],
+  //   firstColumn: [0, 3, 6],
+  //   secondColumn: [1, 4, 7],
+  //   thirdColumn: [2, 5, 8],
+  //   diagonalLeft: [0, 4, 8],
+  //   diagonalRight: [2, 4, 6],
+  // };
+
+  const winLocations = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
 
   const grid = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
@@ -47,8 +58,8 @@ const game = (function () {
   let roundCount = 1;
   let gameWinner;
   let roundWinner;
-  let player1 = createPlayer("X");
-  let player2 = createPlayer("O");
+  let player1 = createPlayer();
+  let player2 = createPlayer();
   player1.canMove = true;
   player2.canMove = false;
 
@@ -58,20 +69,24 @@ const game = (function () {
 
   const playerWonTheRound = (player) => {
     let winLocations = gameBoard.winLocations;
-    log("won?");
-    for (let winLoc in winLocations) {
-      log(winLoc);
+
+    //iterates over the 2d array containing the winning conditions
+    for (let array of winLocations) {
+      for (let i = 0; i < array.length; i++) {
+        //checks if the player has been into the locations in the array
+        if (!player.locations.includes(String(array[i]))) break;
+        if (i == array.length - 1) return true; //return true if all locations int the win condition have been visited by the user
+      }
     }
 
-    // for (let location in winLocations) {
-    //   log(location);
-    //   if (player.locations.includes(winLocations[location])) {
-    //     log("hi");
-    //     player.score++;
-    //     return true;
+    // for (let winLoc in winLocations) {
+    //   for (let i = 0; i < winLocations[winLoc].length; i++) {
+    //     if (!player.locations.includes(String(winLocations[winLoc][i]))) {
+    //       log(i + " not in ");
+    //       continue;
+    //     }
     //   }
     // }
-    // return false;
   };
 
   const movePlayer = (player1, player2, location) => {
@@ -122,7 +137,6 @@ const game = (function () {
           game.player1.increaseMoveCount();
 
           if (game.player1.getMoveCount() > 2) {
-            log("hi");
             game.playerWonTheRound(game.player1);
           }
         } else {
