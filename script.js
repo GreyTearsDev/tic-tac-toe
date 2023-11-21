@@ -58,7 +58,6 @@ const game = (function () {
 
   const getDesiredLocation = (locationIndex) => {
     gameBoard.grid.splice(locationIndex, 1, undefined); // replaces the value in the row with undefined so it cannot be chosen again
-    log(gameBoard.grid);
   };
 
   const playerWonTheRound = (player) => {
@@ -79,8 +78,7 @@ const game = (function () {
     if (playerWonTheRound(player)) {
       roundCount++;
       player.setScore();
-      log("someone won");
-      resetGameData();
+      return true;
     }
   };
 
@@ -141,7 +139,6 @@ const game = (function () {
       let cellId = cell.id;
 
       if (game.gameBoard.grid.includes(Number(cellId))) {
-        log(game.gameBoard.grid[cellId]);
         if (
           game.player1.canMove === true &&
           game.gameBoard.grid[cellId] !== undefined
@@ -151,18 +148,17 @@ const game = (function () {
           cell.style.color = "#044040";
           player2Name.style.border = "5px solid white";
           player1Name.style.border = "none";
-          log("player 1 movements: " + game.player1.getMoveCount());
 
+          log(game.player1.getMoveCount());
           if (
             game.player1.getMoveCount() > 2 &&
             game.declareRoundWinner(game.player1)
           ) {
-            log("1 won the game");
+            game.resetGameData();
             resetGrid();
+
             // displayScore(game.player1, game.player2);
           }
-
-          log("player 1 movements: " + game.player1.getMoveCount());
         } else {
           game.movePlayer(game.player1, game.player2, cellId);
           cell.textContent = "O";
@@ -174,7 +170,7 @@ const game = (function () {
             game.player2.getMoveCount() > 2 &&
             game.declareRoundWinner(game.player2)
           ) {
-            log("2 won the game");
+            game.resetGameData();
             resetGrid();
             // displayScore(game.player1, game.player2);
           }
@@ -187,7 +183,6 @@ const game = (function () {
       }
       if (game.roundCount > 2) {
         let winner = game.declareGameWinner(game.player1, game.player2);
-        log(winner);
       }
     })
   );
@@ -227,6 +222,5 @@ const game = (function () {
     cells.forEach(function (cell) {
       cell.textContent = "";
     });
-    log("o");
   };
 })();
