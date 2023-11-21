@@ -31,6 +31,9 @@ let createPlayer = function () {
   const getMoveCount = () => {
     return moveCount;
   };
+  const resetMoveCount = () => {
+    moveCount = 0;
+  };
   const getScore = () => score;
   const setScore = () => score++;
   const resetLocations = () => {
@@ -45,6 +48,7 @@ let createPlayer = function () {
     move,
     getMoveCount,
     resetLocations,
+    resetMoveCount,
   };
 };
 
@@ -109,6 +113,8 @@ const game = (function () {
   const resetGameData = () => {
     player1.resetLocations();
     player2.resetLocations();
+    player1.resetMoveCount();
+    player2.resetMoveCount();
     gameBoard.grid = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   };
 
@@ -131,6 +137,8 @@ const game = (function () {
   const cells = document.querySelectorAll(".cell");
   const player1Name = document.querySelector(".one");
   const player2Name = document.querySelector(".two");
+  const player1Score = document.querySelector("#player-one-score-value");
+  const player2Score = document.querySelector("#player-two-score-value");
 
   player1Name.style.border = "5px solid white";
 
@@ -156,6 +164,7 @@ const game = (function () {
           ) {
             game.resetGameData();
             resetGrid();
+            player1Score.textContent = game.player1.getScore();
 
             // displayScore(game.player1, game.player2);
           }
@@ -172,6 +181,7 @@ const game = (function () {
           ) {
             game.resetGameData();
             resetGrid();
+            player2Score.textContent = game.player2.getScore();
             // displayScore(game.player1, game.player2);
           }
         }
