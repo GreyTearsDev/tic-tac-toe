@@ -1,17 +1,6 @@
 const log = console.log;
 
 const createGameBoard = function () {
-  // const winLocations = {
-  //   firstRow: [0, 1, 2],
-  //   secondRow: [3, 4, 5],
-  //   thirdRow: [6, 7, 8],
-  //   firstColumn: [0, 3, 6],
-  //   secondColumn: [1, 4, 7],
-  //   thirdColumn: [2, 5, 8],
-  //   diagonalLeft: [0, 4, 8],
-  //   diagonalRight: [2, 4, 6],
-  // };
-
   const winLocations = [
     [0, 1, 2],
     [3, 4, 5],
@@ -34,10 +23,11 @@ let createPlayer = function () {
   let canMove; // keeps track of whether it is the users turn to play (true if yes. false if no)
   let moveCount = 0;
 
-  const move = (location) => locations.push(location);
-  const increaseMoveCount = () => {
+  const move = (location) => {
+    locations.push(location);
     moveCount++;
   };
+
   const getMoveCount = () => {
     return moveCount;
   };
@@ -54,7 +44,6 @@ let createPlayer = function () {
     locations,
     move,
     getMoveCount,
-    increaseMoveCount,
     resetLocations,
   };
 };
@@ -68,7 +57,8 @@ const game = (function () {
   player2.canMove = false;
 
   const getDesiredLocation = (locationIndex) => {
-    return gameBoard.grid.splice(locationIndex, 1, undefined); // replaces the value in the row with undefined so it cannot be chosen again
+    gameBoard.grid.splice(locationIndex, 1, undefined); // replaces the value in the row with undefined so it cannot be chosen again
+    log(gameBoard.grid);
   };
 
   const playerWonTheRound = (player) => {
@@ -89,12 +79,13 @@ const game = (function () {
     if (playerWonTheRound(player)) {
       roundCount++;
       player.setScore();
+      log("someone won");
       resetGameData();
     }
   };
 
   const declareGameWinner = (player1, player2) => {
-    player1.getScore > player2.getScore ? player1 : player2;
+    player1.getScore() > player2.getScore() ? player1 : player2;
   };
 
   const isADraw = () => {
@@ -103,7 +94,8 @@ const game = (function () {
   };
 
   const movePlayer = (player1, player2, location) => {
-    getDesiredLocation(location);
+    if (gameBoard.grid[location] === undefined) return; // stops user from placing marker twice on the same cell
+    getDesiredLocation(location); // makes the location unavailable for future plays
 
     if (player1.canMove) {
       player1.move(location);
@@ -133,41 +125,65 @@ const game = (function () {
     declareGameWinner,
     isADraw,
     resetGameData,
-    totalMoveCount,
   };
 })();
 
 (function () {
   const startBtn = document.querySelector("#start-btn");
   const cells = document.querySelectorAll(".cell");
+  const player1Name = document.querySelector(".one");
+  const player2Name = document.querySelector(".two");
+
+  player1Name.style.border = "5px solid white";
 
   cells.forEach((cell) =>
     cell.addEventListener("click", function () {
       let cellId = cell.id;
 
       if (game.gameBoard.grid.includes(Number(cellId))) {
-        if (game.player1.canMove === true) {
+        log(game.gameBoard.grid[cellId]);
+        if (
+          game.player1.canMove === true &&
+          game.gameBoard.grid[cellId] !== undefined
+        ) {
           game.movePlayer(game.player1, game.player2, cellId);
           cell.textContent = "X";
           cell.style.color = "#044040";
-          game.player1.increaseMoveCount();
+          player2Name.style.border = "5px solid white";
+          player1Name.style.border = "none";
+          log("player 1 movements: " + game.player1.getMoveCount());
 
-          if (game.player1.getMoveCount() > 2) {
-            game.declareRoundWinner(game.player1);
+          if (
+            game.player1.getMoveCount() > 2 &&
+            game.declareRoundWinner(game.player1)
+          ) {
+            log("1 won the game");
+            resetGrid();
+            // displayScore(game.player1, game.player2);
           }
+
+          log("player 1 movements: " + game.player1.getMoveCount());
         } else {
           game.movePlayer(game.player1, game.player2, cellId);
           cell.textContent = "O";
           cell.style.color = "#8c1f28";
-          game.player2.increaseMoveCount();
+          player1Name.style.border = "5px solid white";
+          player2Name.style.border = "none";
 
-          if (game.player2.getMoveCount() > 2) {
-            game.declareRoundWinner(game.player2);
+          if (
+            game.player2.getMoveCount() > 2 &&
+            game.declareRoundWinner(game.player2)
+          ) {
+            log("2 won the game");
+            resetGrid();
+            // displayScore(game.player1, game.player2);
           }
         }
       }
       if (game.isADraw()) {
-        //declare draw
+        //show draw board
+        resetGrid();
+        game.resetGameData();
       }
       if (game.roundCount > 2) {
         let winner = game.declareGameWinner(game.player1, game.player2);
@@ -199,5 +215,18 @@ const game = (function () {
     }
   });
 
-  const showFinalresult = () => {};
+  const displayScore = (player1, player2) => {
+    const player1Score = document.querySelector("#player-one-score-value");
+    const player2Score = document.querySelector("#player-two-score-value");
+
+    player1Score.textContent = player1.getScore();
+    player2Score.textContent = player2.getScore();
+  };
+
+  const resetGrid = () => {
+    cells.forEach(function (cell) {
+      cell.textContent = "";
+    });
+    log("o");
+  };
 })();
