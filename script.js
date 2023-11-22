@@ -1,5 +1,3 @@
-const log = console.log;
-
 const createGameBoard = function () {
   const winLocations = [
     [0, 1, 2],
