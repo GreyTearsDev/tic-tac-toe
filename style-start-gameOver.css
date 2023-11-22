@@ -140,3 +140,13 @@ button:active {
 #final-result {
   font-size: 2rem;
 }
+
+a {
+  text-decoration: none;
+  color: var(--red);
+}
+
+a:hover {
+  cursor: pointer;
+  color: var(--red-mid);
+}
