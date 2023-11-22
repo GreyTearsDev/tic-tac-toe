@@ -216,9 +216,17 @@ const game = (function () {
         if (!winner) {
           finalResult.textContent = "It is a Draw!";
         } else if (winner === game.player1) {
-          finalResult.textContent = `${player1InputName} won!`;
+          if (player1InputName === "") {
+            finalResult.textContent = "Player X won!";
+          } else {
+            finalResult.textContent = `${player1InputName} won!`;
+          }
         } else {
-          finalResult.textContent = `${player2InputName} won!`;
+          if (player2InputName === "") {
+            finalResult.textContent = "Player O won!";
+          } else {
+            finalResult.textContent = `${player2InputName} won!`;
+          }
         }
 
         restartBtn.addEventListener("click", function () {
