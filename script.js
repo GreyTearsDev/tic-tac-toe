@@ -150,23 +150,19 @@ const game = (function () {
 (function () {
   const startBtn = document.querySelector("#start-btn");
   const cells = document.querySelectorAll(".cell");
-  const player1Name = document.querySelector(".one");
-  const player2Name = document.querySelector(".two");
+
   const player1Score = document.querySelector("#player-one-score-value");
   const player2Score = document.querySelector("#player-two-score-value");
   const roundCounter = document.querySelector(".round-count");
 
   roundCounter.textContent = `Round ${game.roundCount}`;
-  player1Name.style.border = "5px solid white";
 
   cells.forEach((cell) => {
     cell.addEventListener("mouseenter", function () {
       if (game.player1.canMove) {
-        cell.style.backgroundColor = "#044040";
-        cell.style.opacity = "0.09";
+        cell.style.backgroundColor = "rgba(4, 64, 64, 0.5)";
       } else {
-        cell.style.backgroundColor = "#8c1f28";
-        cell.style.opacity = "0.09";
+        cell.style.backgroundColor = "rgba(140, 31, 40, 0.5)";
       }
     });
 
@@ -179,18 +175,12 @@ const game = (function () {
       let cellId = cell.id;
 
       if (game.gameBoard.grid.includes(Number(cellId))) {
-        if (
-          game.player1.canMove === true &&
-          game.gameBoard.grid[cellId] !== undefined
-        ) {
+        if (game.player1.canMove && game.gameBoard.grid[cellId] !== undefined) {
           game.movePlayer(game.player1, game.player2, cellId);
           cell.textContent = "X";
           cell.style.color = "#044040";
           cell.style.backgroundColor = "#fff";
           cell.style.opacity = "1";
-
-          player2Name.style.border = "5px solid white";
-          player1Name.style.border = "none";
 
           if (
             game.player1.getMoveCount() > 2 &&
@@ -208,8 +198,6 @@ const game = (function () {
           cell.style.color = "#8c1f28";
           cell.style.backgroundColor = "#fff";
           cell.style.opacity = "1";
-          player1Name.style.border = "5px solid white";
-          player2Name.style.border = "none";
 
           if (
             game.player2.getMoveCount() > 2 &&
