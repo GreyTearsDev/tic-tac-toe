@@ -159,10 +159,11 @@ const game = (function () {
 
   cells.forEach((cell) => {
     cell.addEventListener("mouseenter", function () {
+      cell.style.transition = "400ms";
       if (game.player1.canMove) {
-        cell.style.backgroundColor = "rgba(4, 64, 64, 0.5)";
+        cell.style.backgroundColor = "rgba(4, 64, 64, 0.95)";
       } else {
-        cell.style.backgroundColor = "rgba(140, 31, 40, 0.5)";
+        cell.style.backgroundColor = "rgba(140, 31, 40, 0.95)";
       }
     });
 
@@ -189,8 +190,6 @@ const game = (function () {
             resetGrid();
             player1Score.textContent = game.player1.getScore();
             roundCounter.textContent = `Round ${game.getRoundCount()}`;
-
-            // displayScore(game.player1, game.player2);
           }
         } else {
           game.movePlayer(game.player1, game.player2, cellId);
@@ -207,20 +206,9 @@ const game = (function () {
             player2Score.textContent = game.player2.getScore();
             game.increaseRoundCount();
             roundCounter.textContent = `Round ${game.getRoundCount()}`;
-
-            // displayScore(game.player1, game.player2);
           }
         }
       }
-      log("");
-      log("grid after " + game.gameBoard.grid);
-      log("");
-      log("player1Moves after " + game.player1.getMoveCount());
-      log("player1Locations after " + game.player1.locations);
-      log("");
-      log("player2Moves after " + game.player2.getMoveCount());
-      log("player2Locations after " + game.player2.locations);
-      log("");
 
       if (game.isADraw()) {
         //show draw board
