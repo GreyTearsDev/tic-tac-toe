@@ -7,6 +7,6 @@ A simple game created while going through [The Odin Projet](https://www.theodinp
 
 ## Where to play it?
 
-You can [play the game here]()
+You can [play the game here](https://greytearsdev.github.io/tic-tac-toe/)
 
 ###### Copyright © Tirso Samalungo (GreyTearsDev) 2023
