@@ -39,6 +39,9 @@ let createPlayer = function () {
   const resetLocations = () => {
     locations.length = 0;
   };
+  const resetScore = () => {
+    score = 0;
+  };
 
   return {
     canMove,
@@ -49,6 +52,7 @@ let createPlayer = function () {
     getMoveCount,
     resetLocations,
     resetMoveCount,
+    resetScore,
   };
 };
 
@@ -98,7 +102,9 @@ const game = (function () {
   };
 
   const declareGameWinner = (player1, player2) => {
-    player1.getScore() > player2.getScore() ? player1 : player2;
+    if (player1.getScore() === player2.getScore()) return false;
+    if (player1.getScore() > player2.getScore()) return player1;
+    return player2;
   };
 
   const isADraw = () => {
@@ -149,7 +155,9 @@ const game = (function () {
 (function () {
   const startBtn = document.querySelector("#start-btn");
   const cells = document.querySelectorAll(".cell");
-
+  const startScreen = document.querySelector("#start-screen");
+  const gameBoardScreen = document.querySelector("#game-screen");
+  const gameOverScreen = document.querySelector("#game-over-screen");
   const player1Score = document.querySelector("#player-one-score-value");
   const player2Score = document.querySelector("#player-two-score-value");
   const roundCounter = document.querySelector(".round-count");
@@ -180,9 +188,46 @@ const game = (function () {
         cell.style.backgroundColor = "#fff";
       };
 
+      const fullReset = () => {
+        game.resetGameData();
+        game.player1.resetScore();
+        game.player2.resetScore();
+        game.resetRoundCount();
+        resetGrid();
+      };
+
+      const endTheGame = () => {
+        const finalResult = document.querySelector("#final-result");
+        const player1InputName =
+          document.querySelector("#player-one-name").value;
+        const player2InputName =
+          document.querySelector("#player-two-name").value;
+        const restartBtn = document.querySelector("#restart");
+        let winner = game.declareGameWinner(game.player1, game.player2);
+
+        startScreen.style.display = "none";
+        gameBoardScreen.style.display = "none";
+        gameOverScreen.style.display = "flex";
+
+        if (!winner) {
+          finalResult.textContent = "It is a Draw!";
+        } else if (winner === game.player1) {
+          finalResult.textContent = `${player1InputName} won!`;
+        } else {
+          finalResult.textContent = `${player2InputName} won!`;
+        }
+
+        restartBtn.addEventListener("click", function () {
+          fullReset();
+          startScreen.style.display = "flex";
+          gameBoardScreen.style.display = "none";
+          gameOverScreen.style.display = "none";
+        });
+      };
+
       // check if the cell has already been marked
       if (game.gameBoard.grid.includes(Number(cellId))) {
-        if (game.player1.canMove && game.gameBoard.grid[cellId] !== undefined) {
+        if (game.player1.canMove) {
           game.movePlayer(game.player1, game.player2, cellId);
           displayMarks("X", "#044040");
 
@@ -192,13 +237,12 @@ const game = (function () {
           ) {
             resetGrid();
             player1Score.textContent = game.player1.getScore();
+            game.increaseRoundCount();
             roundCounter.textContent = `Round ${game.getRoundCount()}`;
           }
         } else {
           game.movePlayer(game.player1, game.player2, cellId);
           displayMarks("O", "#8c1f28");
-
-          log("round before 2 wins: " + game.getRoundCount());
 
           if (
             game.player2.getMoveCount() > 2 &&
@@ -213,14 +257,14 @@ const game = (function () {
       }
 
       if (game.isADraw()) {
-        log("hi");
-        //show draw board
         resetGrid();
         game.increaseRoundCount();
         roundCounter.textContent = `Round ${game.getRoundCount()}`;
       }
-      if (game.roundCount > 2) {
-        let winner = game.declareGameWinner(game.player1, game.player2);
+
+      log(game.getRoundCount());
+      if (game.getRoundCount() > 3) {
+        endTheGame();
       }
     });
   });
@@ -230,9 +274,6 @@ const game = (function () {
     const player2Name = document.querySelector(".two");
     const player1InputName = document.querySelector("#player-one-name").value;
     const player2InputName = document.querySelector("#player-two-name").value;
-    const startScreen = document.querySelector("#start-screen");
-    const gameBoardScreen = document.querySelector("#game-screen");
-    const gameOverScreen = document.querySelector("#game-over-screen");
 
     startScreen.style.display = "none";
     gameBoardScreen.style.display = "grid";
@@ -245,14 +286,6 @@ const game = (function () {
       player2Name.textContent = player2InputName;
     }
   });
-
-  const displayScore = (player1, player2) => {
-    const player1Score = document.querySelector("#player-one-score-value");
-    const player2Score = document.querySelector("#player-two-score-value");
-
-    player1Score.textContent = player1.getScore();
-    player2Score.textContent = player2.getScore();
-  };
 
   const resetGrid = () => {
     game.resetGameData();

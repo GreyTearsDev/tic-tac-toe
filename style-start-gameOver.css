@@ -136,3 +136,7 @@ button:active {
   justify-content: center;
   display: none;
 }
+
+#final-result {
+  font-size: 2rem;
+}
