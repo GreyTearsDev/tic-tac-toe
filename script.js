@@ -10,10 +10,9 @@ const createGameBoard = function () {
     [2, 5, 8],
     [0, 4, 8],
     [2, 4, 6],
-  ];
+  ]; // the winning conditions
 
   const grid = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-
   return { grid, winLocations };
 };
 
@@ -102,9 +101,13 @@ const game = (function () {
   };
 
   const declareGameWinner = (player1, player2) => {
-    if (player1.getScore() === player2.getScore()) return false;
     if (player1.getScore() > player2.getScore()) return player1;
     return player2;
+  };
+
+  const resetCanMove = () => {
+    player1.canMove = true;
+    player2.canMove = false;
   };
 
   const isADraw = () => {
@@ -149,6 +152,7 @@ const game = (function () {
     increaseRoundCount,
     resetRoundCount,
     getRoundCount,
+    resetCanMove,
   };
 })();
 
@@ -161,127 +165,69 @@ const game = (function () {
   const player1Score = document.querySelector("#player-one-score-value");
   const player2Score = document.querySelector("#player-two-score-value");
   const roundCounter = document.querySelector(".round-count");
-
   roundCounter.textContent = `Round ${game.roundCount}`;
 
-  cells.forEach((cell) => {
-    cell.addEventListener("mouseenter", function () {
-      cell.style.transition = "300ms";
-      if (game.player1.canMove) {
-        cell.style.backgroundColor = "rgba(4, 64, 64, 0.95)";
+  const resetGrid = () => {
+    game.resetGameData();
+    cells.forEach(function (cell) {
+      cell.textContent = "";
+    });
+  };
+
+  const displayMarks = (mark, markColor, cell) => {
+    cell.textContent = mark;
+    cell.style.color = markColor;
+    cell.style.backgroundColor = "#fff";
+  };
+
+  const fullReset = () => {
+    game.resetGameData();
+    game.player1.resetScore();
+    game.player2.resetScore();
+    game.resetRoundCount();
+    game.resetCanMove();
+    player1Score.textContent = game.player1.getScore();
+    player2Score.textContent = game.player2.getScore();
+    roundCounter.textContent = `Round ${game.getRoundCount()}`;
+    resetGrid();
+  };
+
+  const endTheGame = (winner) => {
+    const finalResult = document.querySelector("#final-result");
+    const player1InputName = document.querySelector("#player-one-name").value;
+    const player2InputName = document.querySelector("#player-two-name").value;
+    const restartBtn = document.querySelector("#restart");
+
+    startScreen.style.display = "none";
+    gameBoardScreen.style.display = "none";
+    gameOverScreen.style.display = "flex";
+
+    if (!winner) {
+      finalResult.textContent = "It is a Draw!";
+    } else if (winner === game.player1) {
+      if (player1InputName === "") {
+        finalResult.textContent = `Player X won with ${winner.getScore()} points!`;
       } else {
-        cell.style.backgroundColor = "rgba(140, 31, 40, 0.95)";
+        finalResult.textContent = `${player1InputName} won with ${winner.getScore()} points!`;
       }
+    } else {
+      if (player2InputName === "") {
+        finalResult.textContent = `Player O won with ${winner.getScore()}!`;
+      } else {
+        finalResult.textContent = `${player2InputName} won with ${winner.getScore()} points!`;
+      }
+    }
+
+    restartBtn.addEventListener("click", function () {
+      fullReset();
+      player1InputName.value = player1InputName;
+      player2InputName.value = player2InputName;
+
+      startScreen.style.display = "flex";
+      gameBoardScreen.style.display = "none";
+      gameOverScreen.style.display = "none";
     });
-
-    cell.addEventListener("mouseleave", function () {
-      cell.style.backgroundColor = "#fff";
-      cell.style.opacity = "1";
-    });
-
-    cell.addEventListener("click", function () {
-      let cellId = cell.id;
-
-      const displayMarks = (mark, markColor) => {
-        cell.textContent = mark;
-        cell.style.color = markColor;
-        cell.style.backgroundColor = "#fff";
-      };
-
-      const fullReset = () => {
-        game.resetGameData();
-        game.player1.resetScore();
-        game.player2.resetScore();
-        game.resetRoundCount();
-        player1Score.textContent = game.player1.getScore();
-        player2Score.textContent = game.player2.getScore();
-        roundCounter.textContent = `Round ${game.getRoundCount()}`;
-
-        resetGrid();
-      };
-
-      const endTheGame = () => {
-        const finalResult = document.querySelector("#final-result");
-        const player1InputName =
-          document.querySelector("#player-one-name").value;
-        const player2InputName =
-          document.querySelector("#player-two-name").value;
-        const restartBtn = document.querySelector("#restart");
-        let winner = game.declareGameWinner(game.player1, game.player2);
-
-        startScreen.style.display = "none";
-        gameBoardScreen.style.display = "none";
-        gameOverScreen.style.display = "flex";
-
-        if (!winner) {
-          finalResult.textContent = "It is a Draw!";
-        } else if (winner === game.player1) {
-          if (player1InputName === "") {
-            finalResult.textContent = `Player X won with ${winner.getScore()} points!`;
-          } else {
-            finalResult.textContent = `${player1InputName} won with ${winner.getScore()} points!`;
-          }
-        } else {
-          if (player2InputName === "") {
-            finalResult.textContent = `Player O won with ${winner.getScore()}!`;
-          } else {
-            finalResult.textContent = `${player2InputName} won with ${winner.getScore()} points!`;
-          }
-        }
-
-        restartBtn.addEventListener("click", function () {
-          fullReset();
-          player1InputName.value = player1InputName;
-          player2InputName.value = player2InputName;
-
-          startScreen.style.display = "flex";
-          gameBoardScreen.style.display = "none";
-          gameOverScreen.style.display = "none";
-        });
-      };
-
-      // check if the cell has already been marked
-      if (game.gameBoard.grid.includes(Number(cellId))) {
-        if (game.player1.canMove) {
-          game.movePlayer(game.player1, game.player2, cellId);
-          displayMarks("X", "#044040");
-
-          if (
-            game.player1.getMoveCount() > 2 &&
-            game.declareRoundWinner(game.player1)
-          ) {
-            resetGrid();
-            player1Score.textContent = game.player1.getScore();
-            game.increaseRoundCount();
-            roundCounter.textContent = `Round ${game.getRoundCount()}`;
-          }
-        } else {
-          game.movePlayer(game.player1, game.player2, cellId);
-          displayMarks("O", "#8c1f28");
-
-          if (
-            game.player2.getMoveCount() > 2 &&
-            game.declareRoundWinner(game.player2)
-          ) {
-            resetGrid();
-            player2Score.textContent = game.player2.getScore();
-            game.increaseRoundCount();
-            roundCounter.textContent = `Round ${game.getRoundCount()}`;
-          }
-        }
-      }
-
-      if (game.isADraw()) {
-        resetGrid();
-        game.increaseRoundCount();
-        roundCounter.textContent = `Round ${game.getRoundCount()}`;
-      }
-
-      if (game.getRoundCount() > 3) {
-        endTheGame();
-      }
-    });
-  });
+  };
 
   startBtn.addEventListener("click", function () {
     const player1Name = document.querySelector(".one");
@@ -300,11 +246,66 @@ const game = (function () {
       player2Name.textContent = player2InputName;
     }
   });
-
-  const resetGrid = () => {
-    game.resetGameData();
-    cells.forEach(function (cell) {
-      cell.textContent = "";
+  cells.forEach((cell) => {
+    cell.addEventListener("mouseenter", function () {
+      cell.style.transition = "300ms";
+      if (game.player1.canMove) {
+        cell.style.backgroundColor = "rgba(4, 64, 64, 0.95)";
+      } else {
+        cell.style.backgroundColor = "rgba(140, 31, 40, 0.95)";
+      }
     });
-  };
+
+    cell.addEventListener("mouseleave", function () {
+      cell.style.backgroundColor = "#fff";
+      cell.style.opacity = "1";
+    });
+
+    cell.addEventListener("click", function () {
+      let cellId = cell.id;
+
+      // check if the cell has already been marked
+      if (!game.gameBoard.grid.includes(Number(cellId))) return;
+
+      if (game.player1.canMove) {
+        game.movePlayer(game.player1, game.player2, cellId);
+        displayMarks("X", "#044040", cell);
+
+        if (
+          game.player1.getMoveCount() > 2 &&
+          game.declareRoundWinner(game.player1)
+        ) {
+          resetGrid();
+          player1Score.textContent = game.player1.getScore();
+          game.increaseRoundCount();
+          roundCounter.textContent = `Round ${game.getRoundCount()}`;
+        }
+      } else {
+        game.movePlayer(game.player1, game.player2, cellId);
+        displayMarks("O", "#8c1f28", cell);
+
+        if (
+          game.player2.getMoveCount() > 2 &&
+          game.declareRoundWinner(game.player2)
+        ) {
+          resetGrid();
+          player2Score.textContent = game.player2.getScore();
+          game.increaseRoundCount();
+          roundCounter.textContent = `Round ${game.getRoundCount()}`;
+        }
+      }
+
+      if (game.isADraw()) {
+        log("draw");
+        resetGrid();
+        game.increaseRoundCount();
+        roundCounter.textContent = `Round ${game.getRoundCount()}`;
+      }
+
+      if (game.getRoundCount() > 3) {
+        let winner = game.declareGameWinner(game.player1, game.player2);
+        if (winner) endTheGame(winner);
+      }
+    });
+  });
 })();
