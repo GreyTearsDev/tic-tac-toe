@@ -92,7 +92,6 @@ const game = (function () {
 
   const declareRoundWinner = (player) => {
     if (playerWonTheRound(player)) {
-      roundCount++;
       player.setScore();
       return true;
     }
@@ -159,7 +158,7 @@ const game = (function () {
 
   cells.forEach((cell) => {
     cell.addEventListener("mouseenter", function () {
-      cell.style.transition = "400ms";
+      cell.style.transition = "300ms";
       if (game.player1.canMove) {
         cell.style.backgroundColor = "rgba(4, 64, 64, 0.95)";
       } else {
@@ -175,13 +174,17 @@ const game = (function () {
     cell.addEventListener("click", function () {
       let cellId = cell.id;
 
+      const displayMarks = (mark, markColor) => {
+        cell.textContent = mark;
+        cell.style.color = markColor;
+        cell.style.backgroundColor = "#fff";
+      };
+
+      // check if the cell has already been marked
       if (game.gameBoard.grid.includes(Number(cellId))) {
         if (game.player1.canMove && game.gameBoard.grid[cellId] !== undefined) {
           game.movePlayer(game.player1, game.player2, cellId);
-          cell.textContent = "X";
-          cell.style.color = "#044040";
-          cell.style.backgroundColor = "#fff";
-          cell.style.opacity = "1";
+          displayMarks("X", "#044040");
 
           if (
             game.player1.getMoveCount() > 2 &&
@@ -193,10 +196,9 @@ const game = (function () {
           }
         } else {
           game.movePlayer(game.player1, game.player2, cellId);
-          cell.textContent = "O";
-          cell.style.color = "#8c1f28";
-          cell.style.backgroundColor = "#fff";
-          cell.style.opacity = "1";
+          displayMarks("O", "#8c1f28");
+
+          log("round before 2 wins: " + game.getRoundCount());
 
           if (
             game.player2.getMoveCount() > 2 &&
@@ -211,6 +213,7 @@ const game = (function () {
       }
 
       if (game.isADraw()) {
+        log("hi");
         //show draw board
         resetGrid();
         game.increaseRoundCount();
