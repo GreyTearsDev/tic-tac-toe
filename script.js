@@ -217,15 +217,15 @@ const game = (function () {
           finalResult.textContent = "It is a Draw!";
         } else if (winner === game.player1) {
           if (player1InputName === "") {
-            finalResult.textContent = "Player X won!";
+            finalResult.textContent = `Player X won with ${winner.getScore()} points!`;
           } else {
-            finalResult.textContent = `${player1InputName} won!`;
+            finalResult.textContent = `${player1InputName} won with ${winner.getScore()} points!`;
           }
         } else {
           if (player2InputName === "") {
-            finalResult.textContent = "Player O won!";
+            finalResult.textContent = `Player O won with ${winner.getScore()}!`;
           } else {
-            finalResult.textContent = `${player2InputName} won!`;
+            finalResult.textContent = `${player2InputName} won with ${winner.getScore()} points!`;
           }
         }
 
