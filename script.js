@@ -37,7 +37,7 @@ let createPlayer = function () {
   const getScore = () => score;
   const setScore = () => score++;
   const resetLocations = () => {
-    locations = [];
+    locations.length = 0;
   };
 
   return {
@@ -59,6 +59,18 @@ const game = (function () {
   let player2 = createPlayer();
   player1.canMove = true;
   player2.canMove = false;
+
+  const increaseRoundCount = () => {
+    roundCount++;
+  };
+
+  const getRoundCount = () => {
+    return roundCount;
+  };
+
+  const resetRoundCount = () => {
+    roundCount = 1;
+  };
 
   const getDesiredLocation = (locationIndex) => {
     gameBoard.grid.splice(locationIndex, 1, undefined); // replaces the value in the row with undefined so it cannot be chosen again
@@ -129,6 +141,9 @@ const game = (function () {
     declareGameWinner,
     isADraw,
     resetGameData,
+    increaseRoundCount,
+    resetRoundCount,
+    getRoundCount,
   };
 })();
 
@@ -139,12 +154,22 @@ const game = (function () {
   const player2Name = document.querySelector(".two");
   const player1Score = document.querySelector("#player-one-score-value");
   const player2Score = document.querySelector("#player-two-score-value");
+  const roundCounter = document.querySelector(".round-count");
 
+  roundCounter.textContent = `Round ${game.roundCount}`;
   player1Name.style.border = "5px solid white";
 
   cells.forEach((cell) =>
     cell.addEventListener("click", function () {
       let cellId = cell.id;
+
+      log("grid before " + game.gameBoard.grid);
+      log("");
+      log("player1Moves before " + game.player1.getMoveCount());
+      log("player1Locations before " + game.player1.locations);
+      log("");
+      log("player2Moves before " + game.player2.getMoveCount());
+      log("player2Locations before " + game.player2.locations);
 
       if (game.gameBoard.grid.includes(Number(cellId))) {
         if (
@@ -157,14 +182,13 @@ const game = (function () {
           player2Name.style.border = "5px solid white";
           player1Name.style.border = "none";
 
-          log(game.player1.getMoveCount());
           if (
             game.player1.getMoveCount() > 2 &&
             game.declareRoundWinner(game.player1)
           ) {
-            game.resetGameData();
             resetGrid();
             player1Score.textContent = game.player1.getScore();
+            roundCounter.textContent = `Round ${game.getRoundCount()}`;
 
             // displayScore(game.player1, game.player2);
           }
@@ -179,17 +203,30 @@ const game = (function () {
             game.player2.getMoveCount() > 2 &&
             game.declareRoundWinner(game.player2)
           ) {
-            game.resetGameData();
             resetGrid();
             player2Score.textContent = game.player2.getScore();
+            game.increaseRoundCount();
+            roundCounter.textContent = `Round ${game.getRoundCount()}`;
+
             // displayScore(game.player1, game.player2);
           }
         }
       }
+      log("");
+      log("grid after " + game.gameBoard.grid);
+      log("");
+      log("player1Moves after " + game.player1.getMoveCount());
+      log("player1Locations after " + game.player1.locations);
+      log("");
+      log("player2Moves after " + game.player2.getMoveCount());
+      log("player2Locations after " + game.player2.locations);
+      log("");
+
       if (game.isADraw()) {
         //show draw board
         resetGrid();
-        game.resetGameData();
+        game.increaseRoundCount();
+        roundCounter.textContent = `Round ${game.getRoundCount()}`;
       }
       if (game.roundCount > 2) {
         let winner = game.declareGameWinner(game.player1, game.player2);
@@ -198,7 +235,6 @@ const game = (function () {
   );
 
   startBtn.addEventListener("click", function () {
-    const roundCounter = document.querySelector(".round-count");
     const player1Name = document.querySelector(".one");
     const player2Name = document.querySelector(".two");
     const player1InputName = document.querySelector("#player-one-name").value;
@@ -211,7 +247,6 @@ const game = (function () {
     gameBoardScreen.style.display = "grid";
     gameOverScreen.style.display = "none";
 
-    roundCounter.textContent = `Round ${game.roundCount}`;
     if (!player1InputName == "") {
       player1Name.textContent = player1InputName;
     }
@@ -229,6 +264,7 @@ const game = (function () {
   };
 
   const resetGrid = () => {
+    game.resetGameData();
     cells.forEach(function (cell) {
       cell.textContent = "";
     });
