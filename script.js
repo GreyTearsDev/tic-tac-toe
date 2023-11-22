@@ -217,7 +217,6 @@ const game = (function () {
     gameBoardScreen.style.display = "none";
     gameOverScreen.style.display = "flex";
 
-    log(winner);
     if (winner === false) {
       finalResult.textContent = "It is a Draw!";
     } else if (winner === game.player1) {
