@@ -82,19 +82,41 @@ const game = (function () {
   const playerWonTheRound = (player) => {
     let winLocations = gameBoard.winLocations;
 
-    //iterates over the 2d array containing the winning conditions
-    for (let array of winLocations) {
-      for (let i = 0; i < array.length; i++) {
-        //checks if the player has been into the locations in the array
-        if (!player.locations.includes(String(array[i]))) break;
-        if (i == array.length - 1) return true; //return true if all locations int the win condition have been visited by the user
+    if (player === player1) {
+      for (let i = 0; i < winLocations.length; i++) {
+        for (let j = 0; j < player1.locations.length; j++) {
+          if (!player1.locations.includes(String(winLocations[i][j]))) break;
+          if (j === winLocations[i].length - 1) {
+            return true;
+          }
+        }
       }
+      return false;
+    } else {
+      for (let i = 0; i < winLocations.length; i++) {
+        for (let j = 0; j < player2.locations.length; j++) {
+          if (!player2.locations.includes(String(winLocations[i][j]))) break;
+          if (j === winLocations[i].length - 1) return true;
+        }
+      }
+      return false;
     }
+
+    // //iterates over the 2d array containing the winning conditions
+    // for (let array of winLocations) {
+    //   for (let i = 0; i < array.length; i++) {
+    //     //checks if the player has been into the locations in the array
+    //     // if (!player.locations.includes(String(array[i]))) break;
+    //     if (!array.includes(player.locations[i])) break;
+    //     if (i == array.length - 1) return true; //return true if all locations int the win condition have been visited by the user
+    //   }
+    // }
     return false;
   };
 
   const declareRoundWinner = (player) => {
     if (playerWonTheRound(player)) {
+      log("someone won");
       player.setScore();
       return true;
     }
@@ -246,6 +268,7 @@ const game = (function () {
       player2Name.textContent = player2InputName;
     }
   });
+
   cells.forEach((cell) => {
     cell.addEventListener("mouseenter", function () {
       cell.style.transition = "300ms";
@@ -275,6 +298,9 @@ const game = (function () {
           game.player1.getMoveCount() > 2 &&
           game.declareRoundWinner(game.player1)
         ) {
+          log(game.gameBoard.grid);
+          log("1 won");
+          log(game.player1.locations);
           resetGrid();
           player1Score.textContent = game.player1.getScore();
           game.increaseRoundCount();
@@ -288,6 +314,10 @@ const game = (function () {
           game.player2.getMoveCount() > 2 &&
           game.declareRoundWinner(game.player2)
         ) {
+          log(game.gameBoard.grid);
+          log("2 won");
+          log(game.player2.locations);
+
           resetGrid();
           player2Score.textContent = game.player2.getScore();
           game.increaseRoundCount();
