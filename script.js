@@ -159,17 +159,24 @@ const game = (function () {
   roundCounter.textContent = `Round ${game.roundCount}`;
   player1Name.style.border = "5px solid white";
 
-  cells.forEach((cell) =>
+  cells.forEach((cell) => {
+    cell.addEventListener("mouseenter", function () {
+      if (game.player1.canMove) {
+        cell.style.backgroundColor = "#044040";
+        cell.style.opacity = "0.09";
+      } else {
+        cell.style.backgroundColor = "#8c1f28";
+        cell.style.opacity = "0.09";
+      }
+    });
+
+    cell.addEventListener("mouseleave", function () {
+      cell.style.backgroundColor = "#fff";
+      cell.style.opacity = "1";
+    });
+
     cell.addEventListener("click", function () {
       let cellId = cell.id;
-
-      log("grid before " + game.gameBoard.grid);
-      log("");
-      log("player1Moves before " + game.player1.getMoveCount());
-      log("player1Locations before " + game.player1.locations);
-      log("");
-      log("player2Moves before " + game.player2.getMoveCount());
-      log("player2Locations before " + game.player2.locations);
 
       if (game.gameBoard.grid.includes(Number(cellId))) {
         if (
@@ -179,6 +186,9 @@ const game = (function () {
           game.movePlayer(game.player1, game.player2, cellId);
           cell.textContent = "X";
           cell.style.color = "#044040";
+          cell.style.backgroundColor = "#fff";
+          cell.style.opacity = "1";
+
           player2Name.style.border = "5px solid white";
           player1Name.style.border = "none";
 
@@ -196,6 +206,8 @@ const game = (function () {
           game.movePlayer(game.player1, game.player2, cellId);
           cell.textContent = "O";
           cell.style.color = "#8c1f28";
+          cell.style.backgroundColor = "#fff";
+          cell.style.opacity = "1";
           player1Name.style.border = "5px solid white";
           player2Name.style.border = "none";
 
@@ -231,8 +243,8 @@ const game = (function () {
       if (game.roundCount > 2) {
         let winner = game.declareGameWinner(game.player1, game.player2);
       }
-    })
-  );
+    });
+  });
 
   startBtn.addEventListener("click", function () {
     const player1Name = document.querySelector(".one");
