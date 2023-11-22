@@ -193,6 +193,10 @@ const game = (function () {
         game.player1.resetScore();
         game.player2.resetScore();
         game.resetRoundCount();
+        player1Score.textContent = game.player1.getScore();
+        player2Score.textContent = game.player2.getScore();
+        roundCounter.textContent = `Round ${game.getRoundCount()}`;
+
         resetGrid();
       };
 
@@ -219,6 +223,9 @@ const game = (function () {
 
         restartBtn.addEventListener("click", function () {
           fullReset();
+          player1InputName.value = player1InputName;
+          player2InputName.value = player2InputName;
+
           startScreen.style.display = "flex";
           gameBoardScreen.style.display = "none";
           gameOverScreen.style.display = "none";
@@ -262,7 +269,6 @@ const game = (function () {
         roundCounter.textContent = `Round ${game.getRoundCount()}`;
       }
 
-      log(game.getRoundCount());
       if (game.getRoundCount() > 3) {
         endTheGame();
       }
