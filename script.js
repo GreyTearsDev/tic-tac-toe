@@ -82,12 +82,14 @@ const game = (function () {
   const playerWonTheRound = (player) => {
     let winLocations = gameBoard.winLocations;
 
+    // //iterates over the 2d array containing the winning conditions
     if (player === player1) {
       for (let i = 0; i < winLocations.length; i++) {
         for (let j = 0; j < player1.locations.length; j++) {
           if (!player1.locations.includes(String(winLocations[i][j]))) break;
           if (j === winLocations[i].length - 1) {
-            return true;
+            player1.setScore();
+            return true; //return true if all locations in the win condition have been collected by the player
           }
         }
       }
@@ -96,33 +98,24 @@ const game = (function () {
       for (let i = 0; i < winLocations.length; i++) {
         for (let j = 0; j < player2.locations.length; j++) {
           if (!player2.locations.includes(String(winLocations[i][j]))) break;
-          if (j === winLocations[i].length - 1) return true;
+          if (j === winLocations[i].length - 1) {
+            player2.setScore();
+            return true; //return true if all locations in the win condition have been collected by the player
+          }
         }
       }
       return false;
     }
-
-    // //iterates over the 2d array containing the winning conditions
-    // for (let array of winLocations) {
-    //   for (let i = 0; i < array.length; i++) {
-    //     //checks if the player has been into the locations in the array
-    //     // if (!player.locations.includes(String(array[i]))) break;
-    //     if (!array.includes(player.locations[i])) break;
-    //     if (i == array.length - 1) return true; //return true if all locations int the win condition have been visited by the user
-    //   }
-    // }
-    return false;
   };
 
   const declareRoundWinner = (player) => {
     if (playerWonTheRound(player)) {
-      log("someone won");
-      player.setScore();
       return true;
     }
   };
 
   const declareGameWinner = (player1, player2) => {
+    if (player1.getScore() === player2.getScore()) return false;
     if (player1.getScore() > player2.getScore()) return player1;
     return player2;
   };
@@ -224,7 +217,8 @@ const game = (function () {
     gameBoardScreen.style.display = "none";
     gameOverScreen.style.display = "flex";
 
-    if (!winner) {
+    log(winner);
+    if (winner === false) {
       finalResult.textContent = "It is a Draw!";
     } else if (winner === game.player1) {
       if (player1InputName === "") {
@@ -298,9 +292,6 @@ const game = (function () {
           game.player1.getMoveCount() > 2 &&
           game.declareRoundWinner(game.player1)
         ) {
-          log(game.gameBoard.grid);
-          log("1 won");
-          log(game.player1.locations);
           resetGrid();
           player1Score.textContent = game.player1.getScore();
           game.increaseRoundCount();
@@ -314,10 +305,6 @@ const game = (function () {
           game.player2.getMoveCount() > 2 &&
           game.declareRoundWinner(game.player2)
         ) {
-          log(game.gameBoard.grid);
-          log("2 won");
-          log(game.player2.locations);
-
           resetGrid();
           player2Score.textContent = game.player2.getScore();
           game.increaseRoundCount();
@@ -326,7 +313,6 @@ const game = (function () {
       }
 
       if (game.isADraw()) {
-        log("draw");
         resetGrid();
         game.increaseRoundCount();
         roundCounter.textContent = `Round ${game.getRoundCount()}`;
@@ -334,7 +320,7 @@ const game = (function () {
 
       if (game.getRoundCount() > 3) {
         let winner = game.declareGameWinner(game.player1, game.player2);
-        if (winner) endTheGame(winner);
+        endTheGame(winner);
       }
     });
   });
